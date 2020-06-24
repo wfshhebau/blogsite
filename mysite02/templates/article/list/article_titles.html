@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{#引入自定义标签article/templatetags/article_tags,使用其中的total_articles函数显示文章总数#}
+{% load article_tags %}
+{% block title %}articles{% endblock %}
+{% block content %}
+    <div class="row text-center vertical-middle-sm">
+        <h1>书山有路勤为径，学海无涯苦作舟</h1>
+        <p>这里有{% total_articles %}篇文章供你阅读</p>
+    </div>
+    <div class="container">
+        {% for article in articles %}
+            <div class="list-group">
+            <!--为文章标题添加超链接，以获取该文章的id和slug-->
+            <a href="{{ article.get_url_path }}" class="list-group-item active">
+                <h4 class="list-group-item-heading">{{ article.title }}</h4>
+            </a>
+                <p class="list-group-item-text">作者：<a href="{% url 'article:author_article_titles' article.author.username %}">{{article.author.username  }}</a> </p>
+                <p class="list-group-item-text">概要：{{ article.body|slice:"30"|linebreaks }}</p>
+
+            </div>
+        {% endfor %}
+
+    {#    在下面引入paginator.html分页模板，因为发表的文章书目多了之后，需要分页#}
+    {% include "paginator.html" %}
+    </div>
+
+{% endblock %}
